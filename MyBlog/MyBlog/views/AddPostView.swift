@@ -25,8 +25,11 @@ struct AddPostView: View {
                 Section{
                     TextField("Title", text: $title)
                         .disableAutocorrection(false)
+                        .keyboardType(.default)
                     TextField("Description", text: $description)
                         .disableAutocorrection(false)
+                        .keyboardType(.default)
+                    
 
                 } header: {
                     Text("Main Information")
