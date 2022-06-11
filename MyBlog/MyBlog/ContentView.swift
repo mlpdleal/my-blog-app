@@ -7,11 +7,20 @@
 
 import SwiftUI
 
+
+
 struct ContentView: View {
     
     @StateObject var profilePosts = ProfilePosts()
     @State private var showingAddPost = false
-    @State private var iconListShowing = true
+    @State private var showingGrid = false
+    
+    
+    let columns = [
+        GridItem(.adaptive(minimum: 150))
+    
+    ]
+    
     
     var body: some View {
         
@@ -21,30 +30,79 @@ struct ContentView: View {
                     if profilePosts.posts.isEmpty{
                         Text("No posts")
                     } else{
-                        List{
-                            Section{
-                                ForEach(profilePosts.posts) { post in
-                                    NavigationLink{
-                                        PostDetailsView(postDetail: post)
-                                    } label: {
-                                        VStack(alignment: .leading){
-                                            Text("\(post.title) ")
-                                                .font(.headline)
-                                            Text("\(post.datePost.formatted(date: .abbreviated, time: .omitted))")
-                                                .font(.footnote)
+                        
+                        if showingGrid{
+                            ScrollView{
+                                LazyVGrid(columns: columns){
+                                    ForEach(profilePosts.posts){ post in
+                                        NavigationLink{
+                                            PostDetailsView(postDetail: post)
+                                        } label: {
+                                            VStack{
+                                                Image(post.image)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 100, height: 100)
+                                                    
+                                                VStack{
+                                                    Text(post.title)
+                                                        .font(.headline)
+                                                        .foregroundColor(Color("TextColor"))
+                                                    
+                                                    Text(post.datePost.formatted(date: .abbreviated, time: .omitted))
+                                                        .font(.caption)
+                                                        .foregroundColor(Color("TextColor"))
+                                                }
+                                                .frame(maxWidth: .infinity)
+                                            }
+                                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                                            .overlay{
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color("TextColor"))
+                                                
+                                            }
                                         }
+                                        
+                                    }
+                                }
+                            }
+                            
+                            
+                        } else {
+                            List{
+                                Section{
+                                    ForEach(profilePosts.posts) { post in
+                                        NavigationLink{
+                                            PostDetailsView(postDetail: post)
+                                        } label: {
+                                            HStack{
+                                                Image(post.image)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 75, height: 75)
+                                                
+                                                VStack(alignment: .leading){
+                                                    Text("\(post.title) ")
+                                                        .font(.headline)
+                                                    Text("\(post.datePost.formatted(date: .abbreviated, time: .omitted))")
+                                                        .font(.footnote)
+                                                }
+                                            }
+                                            
+                                        }
+                                        
+                                    }
+                                    .onDelete(perform: removePost)
+                                } header: {
+                                    if !profilePosts.posts.isEmpty{
+                                        Text("My Posts")
                                     }
                                     
                                 }
-                                .onDelete(perform: removePost)
-                            } header: {
-                                if !profilePosts.posts.isEmpty{
-                                    Text("Your Posts")
-                                }
-                                
+                            
                             }
-                        
                         }
+
 
                     }
                 }
@@ -59,9 +117,9 @@ struct ContentView: View {
                     }
                     ToolbarItem(placement: .navigationBarLeading){
                         Button{
-                            iconListShowing.toggle()
+                            showingGrid.toggle()
                         } label: {
-                            if iconListShowing{
+                            if showingGrid{
                                 Image(systemName: "list.dash")
                             } else {
                                 Image(systemName: "rectangle.grid.2x2")

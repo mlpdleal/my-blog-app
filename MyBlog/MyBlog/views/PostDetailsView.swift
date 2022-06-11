@@ -24,6 +24,7 @@ struct PostDetailsView: View {
                 
                 Text(postDetail.description)
                     .font(.body)
+                    .padding()
                 
                 Text("By Sysadmin - \(postDetail.datePost.formatted(date: .abbreviated, time: .shortened))")
                     .font(.footnote)
