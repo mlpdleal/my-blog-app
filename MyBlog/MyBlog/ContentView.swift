@@ -59,6 +59,7 @@ struct ContentView: View {
                                             .overlay{
                                                 RoundedRectangle(cornerRadius: 10)
                                                     .stroke(Color("TextColor"))
+                                                    .opacity(0.3)
                                                 
                                             }
                                         }

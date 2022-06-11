@@ -29,7 +29,7 @@ struct AddPostView: View {
                     TextField("Description", text: $description)
                         .disableAutocorrection(false)
                         .keyboardType(.default)
-                    
+
 
                 } header: {
                     Text("Main Information")
